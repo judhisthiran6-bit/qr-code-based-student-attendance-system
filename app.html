@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>QRAttend Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     APPLICATION
+========================================= -->
+
+<div
+    id="appPage"
+    class="page"
+>
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            QR<span>Attend</span>
+
+        </div>
+
+
+
+        <!-- USER INFORMATION -->
+
+        <div class="user-box">
+
+            <div
+                id="sidebarUserName"
+                class="user-name"
+            >
+                User
+            </div>
+
+            <div
+                id="sidebarUserRole"
+                class="user-role"
+            >
+                Role
+            </div>
+
+        </div>
+
+
+
+        <!-- DYNAMIC NAVIGATION -->
+
+        <div id="navigation">
+
+            <!-- app.js inserts navigation buttons here -->
+
+        </div>
+
+
+
+        <!-- LOGOUT -->
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+
+            Logout
+
+        </button>
+
+
+    </aside>
+
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h2 id="pageTitle">
+                    Dashboard
+                </h2>
+
+                <p>
+                    QR Student Attendance System
+                </p>
+
+            </div>
+
+
+            <div class="top-user">
+
+                Welcome,
+                <span id="topUserName">
+                    User
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+
+        <!-- =========================================
+             ADMIN DASHBOARD
+        ========================================== -->
+
+        <section
+            id="adminDashboard"
+            class="dashboard-section hidden"
+        >
+
+
+            <!-- ADMIN STATISTICS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card blue">
+
+                    <span>
+                        Total Users
+                    </span>
+
+                    <strong id="adminUsersCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-card green">
+
+                    <span>
+                        Teachers
+                    </span>
+
+                    <strong id="adminTeachersCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-card purple">
+
+                    <span>
+                        Attendance Records
+                    </span>
+
+                    <strong id="adminAttendanceCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- USERS -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Registered Users
+                    </h3>
+
+                </div>
+
+
+                <div
+                    id="usersTable"
+                    class="table-container"
+                >
+
+                    <p class="muted">
+                        Loading users...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+
+        <!-- =========================================
+             TEACHER DASHBOARD
+        ========================================== -->
+
+        <section
+            id="teacherDashboard"
+            class="dashboard-section hidden"
+        >
+
+
+            <!-- TEACHER STATS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card blue">
+
+                    <span>
+                        Attendance Sessions
+                    </span>
+
+                    <strong id="teacherSessionCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- =========================================
+                 CREATE ATTENDANCE SESSION
+            ========================================== -->
+
+            <div class="content-grid">
+
+
+                <!-- CREATE QR -->
+
+                <div class="card">
+
+                    <h3>
+                        Start Daily Attendance
+                    </h3>
+
+
+                    <p class="muted">
+                        Generate a temporary QR code
+                        for students to scan.
+                    </p>
+
+
+                    <br>
+
+
+                    <form id="attendanceForm">
+
+
+                        <label for="expiryMinutes">
+                            QR Expiry Time
+                        </label>
+
+
+                        <select
+                            id="expiryMinutes"
+                            required
+                        >
+
+                            <option value="1">
+                                1 Minute
+                            </option>
+
+                            <option value="2">
+                                2 Minutes
+                            </option>
+
+                            <option
+                                value="5"
+                                selected
+                            >
+                                5 Minutes
+                            </option>
+
+                            <option value="10">
+                                10 Minutes
+                            </option>
+
+                            <option value="15">
+                                15 Minutes
+                            </option>
+
+                            <option value="30">
+                                30 Minutes
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                        >
+
+                            Generate QR Code
+
+                        </button>
+
+
+                    </form>
+
+
+                    <div
+                        id="teacherMessage"
+                        class="message"
+                    ></div>
+
+
+                </div>
+
+
+
+
+                <!-- =========================================
+                     QR DISPLAY
+                ========================================== -->
+
+                <div
+                    id="qrCard"
+                    class="card qr-card hidden"
+                >
+
+
+                    <h3 id="qrSubject">
+                        Daily Attendance
+                    </h3>
+
+
+                    <p class="muted">
+                        Students should scan this QR code.
+                    </p>
+
+
+
+                    <div
+                        id="qrcode"
+                        class="qr-container"
+                    ></div>
+
+
+
+                    <div
+                        id="qrTimer"
+                        class="qr-timer"
+                    >
+
+                        00:00
+
+                    </div>
+
+
+
+                    <button
+                        type="button"
+                        class="danger-btn"
+                        onclick="closeAttendanceSession()"
+                    >
+
+                        Close Attendance Session
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- =========================================
+                 TEACHER SESSION HISTORY
+            ========================================== -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3>
+                        Attendance Sessions
+                    </h3>
+
+                </div>
+
+
+                <div
+                    id="teacherSessionsTable"
+                    class="table-container"
+                >
+
+                    <p class="muted">
+                        No attendance sessions yet.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+
+        <!-- =========================================
+             STUDENT DASHBOARD
+        ========================================== -->
+
+        <section
+            id="studentDashboard"
+            class="dashboard-section hidden"
+        >
+
+
+            <!-- STUDENT STATISTICS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card green">
+
+                    <span>
+                        Overall Attendance
+                    </span>
+
+                    <strong id="overallAttendance">
+                        0%
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- =========================================
+                 QR SCANNER + SUMMARY
+            ========================================== -->
+
+            <div class="content-grid">
+
+
+                <!-- SCANNER -->
+
+                <div class="card">
+
+
+                    <h3>
+                        Scan Attendance QR
+                    </h3>
+
+
+                    <p class="muted">
+                        Scan the QR code generated
+                        by your teacher.
+                    </p>
+
+
+
+                    <div
+                        id="reader"
+                        class="scanner"
+                    ></div>
+
+
+
+                    <button
+                        id="startScannerBtn"
+                        type="button"
+                        class="primary-btn full"
+                        onclick="startScanner()"
+                    >
+
+                        📷 Start QR Scanner
+
+                    </button>
+
+
+
+                    <button
+                        id="stopScannerBtn"
+                        type="button"
+                        class="danger-btn full hidden"
+                        onclick="stopScanner()"
+                    >
+
+                        Stop Scanner
+
+                    </button>
+
+
+
+                    <div
+                        id="scanMessage"
+                        class="message"
+                    ></div>
+
+
+                </div>
+
+
+
+
+                <!-- ATTENDANCE SUMMARY -->
+
+                <div class="card">
+
+
+                    <h3>
+                        Attendance Summary
+                    </h3>
+
+
+                    <div id="studentSummary">
+
+                        <p class="muted">
+                            No attendance data yet.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- =========================================
+                 STUDENT ATTENDANCE HISTORY
+            ========================================== -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3>
+                        Attendance History
+                    </h3>
+
+                </div>
+
+
+                <div
+                    id="studentAttendanceTable"
+                    class="table-container"
+                >
+
+                    <p class="muted">
+                        No attendance records yet.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+
+
+<!-- =========================================
+     QR CODE GENERATOR LIBRARY
+========================================= -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+></script>
+
+
+
+<!-- =========================================
+     HTML5 QR SCANNER LIBRARY
+========================================= -->
+
+<script
+    src="https://unpkg.com/html5-qrcode"
+></script>
+
+
+
+<!-- =========================================
+     YOUR JAVASCRIPT
+========================================= -->
+
+<script src="app.js"></script>
+
+
+</body>
+
+</html>
